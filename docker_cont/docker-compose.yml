@@ -1,0 +1,31 @@
+---
+version: '3'
+services:
+  umami:
+    image: ghcr.io/mikecao/umami:postgresql-v1.33.2
+    ports:
+      - "8080:3000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_TYPE: postgresql
+
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_DB
+    env_file:
+      - .env
+    volumes:
+      - umami-db-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  umami-db-data:
