@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-source ../docker_cont/.env
+source /home/$USERNAME/umami_prod/docker_cont/.env
 # Ensure the backup directory exists
 mkdir -p "$BACKUP_DIR"
 BACKUP_DIR=/home/$USERNAME/backups
