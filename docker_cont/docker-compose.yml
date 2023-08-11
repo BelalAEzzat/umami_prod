@@ -22,7 +22,7 @@
 
     - name: Add official Docker GPG key
       rpm_key:
-        key: "htts://download.docker.com/linux/centos/gpg"
+        key: "https://download.docker.com/linux/centos/gpg"
         state: present
 
     - name: Add Docker repo
