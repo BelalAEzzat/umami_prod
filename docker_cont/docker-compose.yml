@@ -1,32 +1,124 @@
 ---
-version: '3'
-services:
-  umami:
-    image: ghcr.io/mikecao/umami:postgresql-v1.33.2
-    container_name: umami
-    ports:
-      - "8080:3000"
-    env_file:
-      - .env
-    environment:
-      DATABASE_TYPE: postgresql
+- name: run umami and postgres on docker for production enviroment
+  hosts: umami_host  # Replace with the name or IP address of your target host
+  become: yes  # Run tasks with sudo privileges
 
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-  db:
-    image: postgres:15-alpine
-    container_name: postgres_DB
-    env_file:
-      - .env
-    volumes:
-      - umami-db-data:/var/lib/postgresql/data
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-volumes:
-  umami-db-data:
+  tasks:
+    - name: Update yum repositories
+      become: yes
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install yum utils
+      yum:
+        name: yum-utils
+        state: latest
+
+    - name: Install device-mapper-persistent-data
+      yum:
+        name: device-mapper-persistent-data
+        state: latest
+
+    - name: Add official Docker GPG key
+      rpm_key:
+        key: "htts://download.docker.com/linux/centos/gpg"
+        state: present
+
+    - name: Add Docker repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install docker-ce & epel-release
+      yum:
+        name: "{{ packages }}"
+        update_cache: yes
+        state: present
+      vars:
+        packages:
+          - docker-ce
+          - epel-release
+      when: ansible_distribution == 'CentOS'
+    - name: Install selinux container-selinux >= 2:2.74, docker-ce & epel-release
+      yum:
+        name: "{{ packages }}"
+        update_cache: yes
+        state: present
+      vars:
+        packages:
+        - http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.107-3.el7.noarch.rpm
+        - docker-ce
+        - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      when: ansible_distribution == 'RedHat'
+
+    - name: Install python-pip
+      yum:
+        name: python-pip
+        update_cache: yes
+        state: present
+
+    - name: Install docker compose
+      pip:
+        name: docker-compose
+        state: present
+    - name: Start Docker Daemon
+      systemd:
+        state: started
+        enabled: yes
+        name: docker
+
+    - name: Install Git
+      become: yes  # Run the task with sudo privileges
+      dnf:
+        name: git
+        state: present
+    - name: Clone GitHub repository
+      git:
+        repo: https://github.com/BelalAEzzat/umami_prod.git
+        dest: ./umami_prod
+        update: yes
+        force: yes
+    - name: Make the script executable
+      become: yes
+      file:
+        path: umami_prod/scripts/backup.sh  # Replace with the actual path to your script
+        mode: 'u+x'  # Add execute permission to the owner
+    - name: Replace % with a string in a file
+      replace:
+        path: umami_prod/scripts/backup.sh  # Path to the file you want to modify
+        regexp: '(/[^/]+)/\^(/[^/]+/)'
+        replace: '\1/{{ USERNAME }}\2'
+    - name: Generate .env file from template
+      template:
+        src: env_template.j2
+        dest: umami_prod/docker_cont/.env
+
+    - name: Display contents of a file
+      shell: cat umami_prod/docker_cont/.env
+      register: cat_output
+
+    - debug:
+        var: cat_output.stdout
+
+    - name: Check if containers are running
+      shell: docker ps --filter "name=umami" --format "{{ '{{' }}.Names{{ '}}' }}"
+      register: umami_container_status
+      changed_when: false
+
+    - name: Check if PostgreSQL container is running
+      shell: docker ps --filter "name=postgres_DB" --format "{{ '{{' }}.Names{{ '}}' }}"
+      register: postgres_container_status
+      changed_when: false
+    - name: Create and start services
+      community.docker.docker_compose:
+        project_src: umami_prod/docker_cont
+      when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""
+
+    - name: Set up cron job for running backup script
+      cron:
+        name: "backup DB container"
+        minute: "*/5"  # Run every 5 minutes, adjust as needed
+        job: "/home/{{USERNAME}}/umami_prod/scripts/backup.sh"
+                                                                   
+                                       
