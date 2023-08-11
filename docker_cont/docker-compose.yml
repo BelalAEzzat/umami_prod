@@ -3,6 +3,7 @@ version: '3'
 services:
   umami:
     image: ghcr.io/mikecao/umami:postgresql-v1.33.2
+    container_name: umami
     ports:
       - "8080:3000"
     env_file:
