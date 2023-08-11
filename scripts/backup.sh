@@ -14,5 +14,5 @@ TIMESTAMP=$(date +%Y%m%d%H%M%S)
 BACKUP_FILE="$BACKUP_DIR/backup_$TIMESTAMP.sql"
 
 # Run the backup command
-docker exec -t "$POSTGRES_CONTAINER" pg_dump -h localhost -U "$POSTGRES_USER" "$POSTGRES_DB" > "$BACKUP_FILE"
+docker exec -t "postgres_DB" pg_dump -h localhost -U "$POSTGRES_USER" "$POSTGRES_DB" > "$BACKUP_FILE"
 
