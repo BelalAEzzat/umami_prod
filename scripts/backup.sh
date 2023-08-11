@@ -1,13 +1,11 @@
 #!/bin/bash
 
 # Configuration
-POSTGRES_CONTAINER=postgres_DB
-POSTGRES_USER=umami
-POSTGRES_DB=umami
-BACKUP_DIR=./backups
-
+source ../docker_cont/.env
 # Ensure the backup directory exists
 mkdir -p "$BACKUP_DIR"
+BACKUP_DIR=/home/$USERNAME/backups
+
 
 # Generate a timestamp for the backup file
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
