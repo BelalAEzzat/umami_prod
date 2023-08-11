@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Configuration
-source /home/$USERNAME/umami_prod/docker_cont/.env
+source /home/^/umami_prod/docker_cont/.env
 # Ensure the backup directory exists
 mkdir -p "$BACKUP_DIR"
-BACKUP_DIR=/home/$USERNAME/backups
+BACKUP_DIR=/home/^/backups
 
 
 # Generate a timestamp for the backup file
