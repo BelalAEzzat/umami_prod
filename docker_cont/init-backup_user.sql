@@ -1,0 +1,2 @@
+CREATE USER backupuser WITH PASSWORD 'backup';
+ALTER USER backupuser WITH REPLICATION, LOGIN;

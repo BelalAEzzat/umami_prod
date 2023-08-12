@@ -18,10 +18,14 @@ services:
   db:
     image: postgres:15-alpine
     container_name: postgres_DB
+    environment:
+      - POSTGRES_DB=umami
     env_file:
       - .env
     volumes:
       - umami-db-data:/var/lib/postgresql/data
+      - ./init-backup-user.sql:/docker-entrypoint-initdb.d/init-user-db.sql  # Mount the SQL script
+
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
