@@ -25,7 +25,6 @@ services:
       - POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - umami-db-data:/var/lib/postgresql/data
-      - ./init-backup_user.sql:/docker-entrypoint-initdb.d/init_backup_user.sql
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -34,5 +33,3 @@ services:
       retries: 5
 volumes:
   umami-db-data:
-  init-scripts:
-    driver: local
