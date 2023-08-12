@@ -24,7 +24,7 @@ services:
       - .env
     volumes:
       - umami-db-data:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
+      - init-backup_user.sql:/docker-entrypoint-initdb.d/init_backup_user.sql
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
