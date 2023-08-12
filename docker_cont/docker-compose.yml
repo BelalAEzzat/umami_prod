@@ -24,7 +24,6 @@ services:
       - .env
     volumes:
       - umami-db-data:/var/lib/postgresql/data
-      - ./init-backup-user.sql:/docker-entrypoint-initdb.d/init-user-db.sql  # Mount the SQL script
 
     restart: always
     healthcheck:
@@ -34,3 +33,5 @@ services:
       retries: 5
 volumes:
   umami-db-data:
+   init-scripts:
+    driver: local
