@@ -2,7 +2,7 @@
 
 # Configuration
 # Ensure the backup directory exists
-BACKUP_DIR=/home/^/backups
+BACKUP_DIR=/var/backups
 mkdir -p "$BACKUP_DIR"
 
 
