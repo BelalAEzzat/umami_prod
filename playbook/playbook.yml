@@ -1,7 +1,7 @@
 ---
 - name: run umami and postgres on docker for production enviroment
-  hosts: umami_host  # Replace with the name or IP address of your target host
-  become: yes  # Run tasks with sudo privileges
+  hosts: umami_host  
+  become: yes  
 
   tasks:
     - name: Update yum repositories
@@ -69,7 +69,7 @@
         name: docker
 
     - name: Install Git
-      become: yes  # Run the task with sudo privileges
+      become: yes
       dnf:
         name: git
         state: present
@@ -79,27 +79,18 @@
         dest: ./umami_prod
         update: yes
         force: yes
+
     - name: Make the script executable
       become: yes
       file:
-        path: umami_prod/scripts/backup.sh  # Replace with the actual path to your script
-        mode: 'u+x'  # Add execute permission to the owner
+        path: umami_prod/scripts/backup.sh  
+        mode: 'u+x' 
+
     - name: Replace % with a string in a file
       replace:
-        path: umami_prod/scripts/backup.sh  # Path to the file you want to modify
+        path: umami_prod/scripts/backup.sh  
         regexp: '(/[^/]+)/\^(/[^/]+/)'
         replace: '\1/{{ USERNAME }}\2'
-    - name: Generate .env file from template
-      template:
-        src: env_template.j2
-        dest: umami_prod/docker_cont/.env
-
-    - name: Display contents of a file
-      shell: cat umami_prod/docker_cont/.env
-      register: cat_output
-
-    - debug:
-        var: cat_output.stdout
 
     - name: Check if containers are running
       shell: docker ps --filter "name=umami" --format "{{ '{{' }}.Names{{ '}}' }}"
@@ -110,15 +101,27 @@
       shell: docker ps --filter "name=postgres_DB" --format "{{ '{{' }}.Names{{ '}}' }}"
       register: postgres_container_status
       changed_when: false
+
+    - name: Generate .env file from template
+      template:
+        src: env_template.j2
+        dest: umami_prod/docker_cont/.env
+      when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""
+
+
     - name: Create and start services
       community.docker.docker_compose:
         project_src: umami_prod/docker_cont
       when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""
 
+    - name: Remove .env file
+      ansible.builtin.file:
+        path: umami_prod/docker_cont/.env
+        state: absent
+
     - name: Set up cron job for running backup script
       cron:
         name: "backup DB container"
-        minute: "*/5"  # Run every 5 minutes, adjust as needed
+        hour: "*/2"
+        minute: "0"
         job: "/home/{{USERNAME}}/umami_prod/scripts/backup.sh"
-                                                                   
-                                       
