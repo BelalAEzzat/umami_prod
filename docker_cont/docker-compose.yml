@@ -4,14 +4,12 @@ services:
   umami:
     image: ghcr.io/mikecao/umami:postgresql-v1.33.2
     container_name: umami
-    replicas: 1
     ports:
       - "8080:3000"
-    
+    env_file:
+      - .env
     environment:
       DATABASE_TYPE: postgresql
-      DATABASE_URL: ${DATABASE_URL}
-      APP_SECRET: ${APP_SECRET}
 
     depends_on:
       db:
@@ -20,14 +18,11 @@ services:
   db:
     image: postgres:15-alpine
     container_name: postgres_DB
-    environment:
-      - POSTGRES_DB: umami
-      - POSTGRES_USER: ${POSTGRES_USER}
-      - POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - umami-db-data:/var/lib/postgresql/data
     restart: always
-    replicas: 1
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
