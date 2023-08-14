@@ -106,7 +106,6 @@
       template:
         src: env_template.j2
         dest: umami_prod/docker_cont/.env
-      when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""
 
 
     - name: Create and start services
@@ -114,10 +113,6 @@
         project_src: umami_prod/docker_cont
       when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""
 
-    - name: Remove .env file
-      ansible.builtin.file:
-        path: umami_prod/docker_cont/.env
-        state: absent
 
     - name: Set up cron job for running backup script
       cron:
