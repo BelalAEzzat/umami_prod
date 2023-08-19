@@ -5,7 +5,7 @@ This repository utilises Ansible to manage and deploy Umami and Postgres contain
 ## Prerequisites
 
 - An Ansible machine is set up on your controller machine.
-### Setup Steps on Ubuntu 18.04 and later versions 
+### installation Steps on Ubuntu 18.04 and later versions 
 1. update apt and install the necessary package to add and remove PPAs
    ```bash
    sudo apt update && apt install software-properties-commo
@@ -18,7 +18,12 @@ This repository utilises Ansible to manage and deploy Umami and Postgres contain
    ```bash
    sudo apt install ansible
    ```
-### Setup Steps on R
+### installation Steps on CentOS Stream 9
+```bash
+sudo yum install ansible-core
+```
+
+refer for information about the installation process on your specific distribution in [ansible official Installation guide](https://docs.ansible.com/ansible/2.9/installation_guide/index.html)
 - Sudo access to the target machine is required for executing the Ansible playbook.
 
 ## Setup Steps
