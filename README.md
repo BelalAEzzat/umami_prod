@@ -37,19 +37,23 @@ a safe method to have sudo accsess to target machine without saving sudo authnti
    ssh-keygen -t rsa -b 4096 -C "comment"
    ```
    comment is what ever text that can help you identifying the perpouse of the key
+   
 **2. Key Storage and Management**
+
    when you genrate an ssh key you have 2 resulting keys 
    the public key which you send to target machine which works simrarily to a lock
    the private key which is used to open the lock and its security is most importent.
    to secure the private key Store them on a hardware security module (HSM) if available, 
    Store keys in a dedicated directory with restricted permissions or example use CHMOD 700, 
    and Never share private keys or passphrase-encrypted private keys.
+   
 **3. Key Distribution**
-copy the created key to all remote machines. 
-```bash
-ssh-copy-id sudo_user@machine_ip
-```
-then you will be prompted for the user password after entering it the public key will be copied to the target machine
+   
+   copy the created key to all remote machines. 
+   ```bash
+   ssh-copy-id sudo_user@machine_ip
+   ```
+   then you will be prompted for the user password after entering it the public key will be copied to the target machine
 
 
 
