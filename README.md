@@ -1,10 +1,24 @@
 # umami_prod
 
-This repository contains scripts and instructions for creating Umami and Postgres containers on CentOS and RedHat distributions, utilizing Ansible for automation.
+This repository utilises Ansible to manage and deploy Umami and Postgres containers on CentOS and RedHat distributions on remote nodes. 
 
 ## Prerequisites
 
 - An Ansible machine is set up on your controller machine.
+### Setup Steps on Ubuntu 18.04 and later versions 
+1. update apt and install the necessary package to add and remove PPAs
+   ```bash
+   sudo apt update && apt install software-properties-commo
+   ```
+2. add official Ansible PPA
+   ```bash
+   sudo apt-add-repository --yes --update ppa:ansible/ansible
+   ```
+3. install Ansible
+   ```bash
+   sudo apt install ansible
+   ```
+### Setup Steps on R
 - Sudo access to the target machine is required for executing the Ansible playbook.
 
 ## Setup Steps
@@ -29,7 +43,7 @@ This repository contains scripts and instructions for creating Umami and Postgre
 
 6. Open the playbook YAML file and update the `hosts` field with the target machine/group name.
 
-7. *(Optional)* The current playbook configuration creates a backup of the PostgreSQL container every 2 hours at `/home/usr/backup`. Modify this location and frequancy according to your preference.
+7. *(Optional)* The current playbook configuration creates a backup of the PostgreSQL container every 2 hours at `/home/usr/backup`. Modify this location and frequency according to your preference.
 
 8. Run the playbook using the following command, passing the `.env` file and the target host inventory file:
 
@@ -39,7 +53,7 @@ This repository contains scripts and instructions for creating Umami and Postgre
 
 9. Access the Umami interface from a browser by visiting `http://targetmachineIP:8080`.
 
-10. Log in using the provided credentials: Username - `admin`, Password - `umami`.
+10. Login using the provided credentials: Username - `admin`, Password - `umami`.
 
 11. Go to "Settings" > "Profile" and change the password to enhance security.
 
