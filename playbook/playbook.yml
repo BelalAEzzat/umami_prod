@@ -4,11 +4,19 @@
   become: yes  
   
   pre_tasks:
+    - set_fact:
+        DATABASE_URL: '{{ DATABASE_URL }}'
+        APP_SECRET: '{{ APP_SECRET }}'
+        POSTGRES_DB: '{{ POSTGRES_DB }}'
+        DATABASE_TYPE: '{{ DATABASE_TYPE }}'
+        POSTGRES_USER: '{{ POSTGRES_USER }}'
+        POSTGRES_PASSWORD: '{{ POSTGRES_PASSWORD }}'
+        USERNAME: '{{ USERNAME }}'
     - name: "wait 600 seconds for target connection to become reachable/usable."
       wait_for_connection:
         timeout: 600 
 
-   roles:
+  roles:
     - docker_setup
     - umami_deploy
     - git_setup

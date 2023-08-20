@@ -9,6 +9,6 @@
     register: postgres_container_status
     changed_when: false
 - name: Create and start services
-community.docker.docker_compose:
-  project_src: umami_prod/docker_cont
-when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""
+  community.docker.docker_compose:
+    project_src: umami_prod/docker_cont
+  when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""

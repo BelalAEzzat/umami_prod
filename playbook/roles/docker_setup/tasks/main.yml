@@ -46,16 +46,12 @@
     - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   when: ansible_distribution == 'RedHat'
 
-- name: Install python-pip
+- name: Install docker-compose-plugin
+  become: yes  # This allows the task to run with sudo privileges
   yum:
-    name: python-pip
-    update_cache: yes
+    name: docker-compose-plugin
     state: present
-
-- name: Install docker-compose
-  pip:
-    name: docker-compose
-    state: present
+    
 - name: Start Docker Daemon
   systemd:
     state: started
