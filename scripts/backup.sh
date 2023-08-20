@@ -6,7 +6,7 @@ source /home/^/umami_prod/docker_cont/.env
 BACKUP_DIR= /var/backups
 LOG_FILE= /var/backuplogs
 mkdir -p "$BACKUP_DIR"
-
+mkdir -p "$LOG_FILE"
 
 
 # Generate a timestamp for the backup file
