@@ -1,6 +1,5 @@
 ---
 - name: Update yum repositories
-  become: yes
   yum:
     name: '*'
     state: latest
@@ -10,48 +9,45 @@
     name: yum-utils
     state: latest
 
-- name: Install device-mapper-persistent-data
+- name: Remove outdated Docker packages
   yum:
-    name: device-mapper-persistent-data
-    state: latest
+    name:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+    state: absent  # This will remove the packages
 
-- name: Add official Docker GPG key
-  rpm_key:
-    key: "https://download.docker.com/linux/centos/gpg"
-    state: present
+- name: Add Docker repository
+  become: yes  
+  yum_repository:
+    name: docker-ce
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/9/$basearch/stable
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
 
-- name: Add Docker repo
-  get_url:
-    url: https://download.docker.com/linux/centos/docker-ce.repo
-    dest: /etc/yum.repos.d/docker-ce.repo
-
-- name: Install docker-ce & epel-release
+- name: Install latest Docker packages
+  become: yes  # To execute the task with sudo privileges
   yum:
-    name: "{{ packages }}"
-    update_cache: yes
-    state: present
-  vars:
-    packages:
+    name:
       - docker-ce
-      - epel-release
-  when: ansible_distribution == 'CentOS'
-- name: Install docker-ce & epel-release
-  yum:
-    name: "{{ packages }}"
-    update_cache: yes
-    state: present
-  vars:
-    packages:
-    - docker-ce
-    - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-  when: ansible_distribution == 'RedHat'
-
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present  # This will ensure the packages are installed
+    
 - name: Install docker-compose-plugin
-  become: yes  # This allows the task to run with sudo privileges
   yum:
     name: docker-compose-plugin
     state: present
-    
+
 - name: Start Docker Daemon
   systemd:
     state: started
