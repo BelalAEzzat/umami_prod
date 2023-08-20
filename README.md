@@ -1,12 +1,12 @@
 # umami_prod
 
-This repository utilises Ansible to manage and deploy Umami and Postgres containers on CentOS and RedHat distributions on remote nodes. 
+This repository utilises Ansible to manage and deploy Umami and Postgres containers on RHEL/CentOS 7,8,9 distributions on remote nodes with steps of tasks that ensure security and automation. 
 
 ## Prerequisites
 
 **- An Ansible machine is set up on your controller machine.**
 
-### installation Steps of ansible on Ubuntu 18.04 and later versions 
+### installation Steps of Ansible on Ubuntu 18.04 and later versions 
 1. update apt and install the necessary package to add and remove PPAs
    ```bash
    sudo apt update && apt install software-properties-commo
@@ -19,7 +19,7 @@ This repository utilises Ansible to manage and deploy Umami and Postgres contain
    ```bash
    sudo apt install ansible
    ```
-### installation Steps of ansible on CentOS Stream 9
+### installation Steps of Ansible on CentOS Stream 9
 ```bash
 sudo yum install ansible-core
 ```
@@ -29,22 +29,22 @@ refer for information about the installation process on your specific distributi
 
 **- Sudo access to the target machine is required for executing the Ansible playbook.**
 
-a safe method to have sudo accsess to target machine without saving sudo authntication in text format in inventory text is using SSH keys
+a safe method to have sudo access to the target machine without saving sudo authentication in text format in inventory text is using SSH keys
 ### SSH key Authentication steps
 
 **1. SSH Key Generation**
    ```bash
    ssh-keygen -t rsa -b 4096 -C "comment"
    ```
-   comment is what ever text that can help you identifying the perpouse of the key
+   - comment is whatever text that can help you identify the purpose of the key
    
 **2. Key Storage and Management**
 
-   when you genrate an ssh key you have 2 resulting keys 
-   the public key which you send to target machine which works simrarily to a lock
-   the private key which is used to open the lock and its security is most importent.
+   when you generate an ssh key you have 2 resulting keys 
+   the public key which you send to the target machine which works similarly to a lock
+   the private key which is used to open the lock and its security is most important.
    to secure the private key Store them on a hardware security module (HSM) if available, 
-   Store keys in a dedicated directory with restricted permissions or example use CHMOD 700, 
+   Store keys in a dedicated directory with restricted permissions for example use CHMOD 700 
    and Never share private keys or passphrase-encrypted private keys.
    
 **3. Key Distribution**
