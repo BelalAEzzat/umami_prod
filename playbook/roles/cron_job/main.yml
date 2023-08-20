@@ -1,0 +1,7 @@
+---
+- name: Set up cron job for running backup script
+  cron:
+    name: "backup DB container"
+    hour: "*/2"
+    minute: "0"
+    job: "/home/{{USERNAME}}/umami_prod/scripts/backup.sh"

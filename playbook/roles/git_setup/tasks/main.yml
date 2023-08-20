@@ -1,0 +1,29 @@
+---
+- name: Install Git
+  become: yes
+  dnf:
+    name: git
+    state: present
+- name: Clone GitHub repository
+  git:
+    repo: https://github.com/BelalAEzzat/umami_prod.git
+    dest: ./umami_prod
+    update: yes
+    force: yes
+
+- name: Make the script executable
+  become: yes
+  file:
+    path: umami_prod/scripts/backup.sh  
+    mode: 'u+x' 
+
+- name: Replace % with a string in a file
+  replace:
+    path: umami_prod/scripts/backup.sh  
+    regexp: '(/[^/]+)/\^(/[^/]+/)'
+    replace: '\1/{{ USERNAME }}\2'
+
+- name: Generate .env file from template
+  template:
+    src: env_template.j2
+    dest: umami_prod/docker_cont/.env

@@ -1,0 +1,63 @@
+---
+- name: Update yum repositories
+  become: yes
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install yum-utils
+  yum:
+    name: yum-utils
+    state: latest
+
+- name: Install device-mapper-persistent-data
+  yum:
+    name: device-mapper-persistent-data
+    state: latest
+
+- name: Add official Docker GPG key
+  rpm_key:
+    key: "https://download.docker.com/linux/centos/gpg"
+    state: present
+
+- name: Add Docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install docker-ce & epel-release
+  yum:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: present
+  vars:
+    packages:
+      - docker-ce
+      - epel-release
+  when: ansible_distribution == 'CentOS'
+- name: Install docker-ce & epel-release
+  yum:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: present
+  vars:
+    packages:
+    - docker-ce
+    - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  when: ansible_distribution == 'RedHat'
+
+- name: Install python-pip
+  yum:
+    name: python-pip
+    update_cache: yes
+    state: present
+
+- name: Install docker-compose
+  pip:
+    name: docker-compose
+    state: present
+- name: Start Docker Daemon
+  systemd:
+    state: started
+    enabled: yes
+    name: docker

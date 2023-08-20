@@ -1,0 +1,14 @@
+---
+- name: Check if containers are running
+    shell: docker ps --filter "name=umami" --format "{{ '{{' }}.Names{{ '}}' }}"
+    register: umami_container_status
+    changed_when: false
+
+- name: Check if PostgreSQL container is running
+    shell: docker ps --filter "name=postgres_DB" --format "{{ '{{' }}.Names{{ '}}' }}"
+    register: postgres_container_status
+    changed_when: false
+- name: Create and start services
+community.docker.docker_compose:
+  project_src: umami_prod/docker_cont
+when: umami_container_status.stdout == "" and postgres_container_status.stdout == ""
