@@ -1,7 +1,7 @@
 ---
-- name: Create and start services
-  community.docker.docker_compose:
-    project_src: umami_prod/docker_cont
-    state: present
-  vars:
-    ansible_python_interpreter: /bin/python3
+- name: Run docker-compose up
+  command: docker compose up -d
+  become: yes
+  args:
+    chdir: ./umami_prod/docker_cont
+
