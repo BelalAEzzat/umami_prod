@@ -27,6 +27,7 @@ sudo yum install ansible-core
 refer for information about the installation process on your specific distribution in [ansible official Installation guide](https://docs.ansible.com/ansible/2.9/installation_guide/index.html)
 
 
+
 **- Sudo access to the target machine is required for executing the Ansible playbook.**
 
 a safe method to have sudo access to the target machine without saving sudo authentication in text format in inventory text is using SSH keys
