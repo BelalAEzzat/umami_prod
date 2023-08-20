@@ -3,8 +3,8 @@
 # Configuration
 source /home/^/umami_prod/docker_cont/.env
 # Ensure the backup directory exists
-BACKUP_DIR= /var/backups
-LOG_FILE= /var/backuplogs
+BACKUP_DIR=/var/backups
+LOG_FILE=/var/backuplogs
 mkdir -p "$BACKUP_DIR"
 mkdir -p "$LOG_FILE"
 
