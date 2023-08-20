@@ -28,6 +28,7 @@ refer for information about the installation process on your specific distributi
 
 
 
+
 **- Sudo access to the target machine is required for executing the Ansible playbook.**
 
 a safe method to have sudo access to the target machine without saving sudo authentication in text format in inventory text is using SSH keys
