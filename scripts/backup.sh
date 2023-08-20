@@ -4,7 +4,7 @@
 source /home/^/umami_prod/docker_cont/.env
 # Ensure the backup directory exists
 BACKUP_DIR=/var/backups
-LOG_FILE=/var/backuplogs
+LOG_DIR=/var/backuplogs
 mkdir -p "$BACKUP_DIR"
 mkdir -p "$LOG_FILE"
 
@@ -14,6 +14,7 @@ TIMESTAMP=$(date +%Y%m%d%H%M%S)
 
 # Define the backup filename
 BACKUP_FILE="$BACKUP_DIR/backup_$TIMESTAMP.sql"
+LOG_FILE="$LOG_DIR/log_$TIMESTAMP.txt"
 
 # Run the backup command
 if docker exec -t "postgres_DB" pg_dump -h localhost -U "$POSTGRES_USER" "$POSTGRES_DB" > "$BACKUP_FILE" 2>> "$LOG_FILE"; then
