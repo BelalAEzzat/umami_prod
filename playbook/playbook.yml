@@ -1,6 +1,6 @@
 ---
 - name: run umami and postgres on docker for production enviroment
-  hosts: umami_host
+  hosts: all
   become: yes  
   
   pre_tasks:
