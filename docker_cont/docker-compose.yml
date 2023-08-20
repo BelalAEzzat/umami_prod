@@ -6,6 +6,7 @@ services:
     container_name: umami
     ports:
       - "8080:3000"
+    scale: 1
     env_file:
       - .env
     environment:
@@ -20,6 +21,7 @@ services:
     container_name: postgres_DB
     env_file:
       - .env
+    scale: 1
     volumes:
       - umami-db-data:/var/lib/postgresql/data
     restart: always
