@@ -4,9 +4,9 @@ This repository utilises Ansible to manage and deploy Umami and Postgres contain
 
 ## Prerequisites
 
-**- An Ansible machine is set up on your controller machine.**
+### - An Ansible machine is set up on your controller machine.
 
-### installation Steps of Ansible on Ubuntu 18.04 and later versions 
+**Installation Steps of Ansible on Ubuntu 18.04 and later versions**
 1. update apt and install the necessary package to add and remove PPAs
    ```bash
    sudo apt update && apt install software-properties-commo
@@ -19,7 +19,7 @@ This repository utilises Ansible to manage and deploy Umami and Postgres contain
    ```bash
    sudo apt install ansible
    ```
-### installation Steps of Ansible on CentOS Stream 9
+ **Installation Steps of Ansible on CentOS Stream 9**
 ```bash
 sudo yum install ansible-core
 ```
@@ -29,10 +29,9 @@ refer for information about the installation process on your specific distributi
 
 
 
-**- Sudo access to the target machine is required for executing the Ansible playbook.**
+### - Sudo access to the target machine is required for executing the Ansible playbook.
 
-a safe method to have sudo access to the target machine without saving sudo authentication in text format in inventory text is using SSH keys
-### SSH key Authentication steps
+a safe method to have sudo access to the target machine without saving sudo authentication in text format in inventory text is using SSH keys SSH key Authentication steps
 
 **1. SSH Key Generation**
    ```bash
