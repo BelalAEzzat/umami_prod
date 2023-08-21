@@ -15,7 +15,10 @@ TIMESTAMP=$(date +%Y%m%d%H%M%S)
 BACKUP_FILE="$BACKUP_DIR/backup_$TIMESTAMP.sql"
 LOG_FILE="$LOG_DIR/log_$TIMESTAMP.txt"
 
-if docker exec -t "postgres_DB" pg_dump -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" > "$BACKUP_FILE" 2>> "$LOG_FILE"; then
+if docker exec -t "postgres_DB" \
+    PGPASSWORD="$POSTGRES_PASSWORD" \
+    pg_dump -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" > "$BACKUP_FILE" 2>> "$LOG_FILE"
+; then
     echo "$(date): Backup successful" >> "$LOG_FILE"
 else
     echo "$(date): Backup failed" >> "$LOG_FILE"
