@@ -4,4 +4,12 @@
   become: yes
   args:
     chdir: ./umami_prod/docker_cont
-
+- name: Run commands inside Docker container
+  community.docker.docker_container_exec:
+    container: postgres_DB
+    argv:
+      - /bin/bash
+      - "-c"
+      - "su - postgres"
+      - "sed -i 's/trust/md5/g' /var/lib/postgresql/data/pg_hba.conf"
+      - "pg_ctl reload -D /var/lib/postgresql/data/pg_hba.conf"
