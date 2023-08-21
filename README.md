@@ -1,6 +1,7 @@
 # umami_prod: Ansible and Docker Deployment for Umami and PostgreSQL
 
 This repository showcases an automated deployment solution using Ansible and Docker for deploying Umami, a web analytics platform, and a PostgreSQL database on CentOS 9 distributions. The deployment process is structured with comprehensive security measures and automation.
+
 Ansible serves as an automation tool designed to streamline the process of orchestrating tasks through code-based instructions. This proves particularly advantageous in situations where uniform application deployment is required across a multitude of servers or machines. Rather than manually replicating instructions to establish an application environment on each instance, Ansible offers the convenience of designating target hosts. Subsequently, it automates the execution of these defined steps across the specified machine set.
 
 The utility of Ansible extends to automating the configuration of environments and the deployment of applications. Notably, by structuring Ansible playbooks to exhibit idempotent behavior, the tool assumes a role in ongoing system maintenance, ensuring consistent and reliable management of system states.
