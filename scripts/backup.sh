@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Configuration
-source /home/^/umami_prod/docker_cont/.env
+env_file=/home/^/umami_prod/docker_cont/.env
+source "$env_file"
 # Ensure the backup directory exists
 BACKUP_DIR=/var/backups
 LOG_DIR=/var/backuplogs
