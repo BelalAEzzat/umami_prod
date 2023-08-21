@@ -1,106 +1,101 @@
-# umami_prod
+# umami_prod: Ansible and Docker Deployment for Umami and PostgreSQL
 
-This repository utilises Ansible to manage and deploy Umami and Postgres containers on RHEL/CentOS 7,8,9 distributions on remote nodes with steps of tasks that ensure security and automation. 
+This repository showcases an automated deployment solution using Ansible and Docker for deploying Umami, a web analytics platform, along with a PostgreSQL database on CentOS 9 distributions. The deployment process is structured with comprehensive security measures and automation.
 
 ## Prerequisites
 
-### - An Ansible machine is set up on your controller machine.
+### - Ansible Installation
 
-**Installation Steps of Ansible on Ubuntu 18.04 and later versions**
-1. update apt and install the necessary package to add and remove PPAs
+Ensure an Ansible instance is set up on your control machine. Below are the installation steps for different platforms:
+
+**Installation Steps of Ansible on Ubuntu 18.04 and later versions:**
+1. Update APT and install the necessary package to manage PPAs:
    ```bash
-   sudo apt update && apt install software-properties-commo
+   sudo apt update && apt install software-properties-common
    ```
-2. add official Ansible PPA
+2. Add the official Ansible PPA:
    ```bash
    sudo apt-add-repository --yes --update ppa:ansible/ansible
    ```
-3. install Ansible
+3. Install Ansible:
    ```bash
    sudo apt install ansible
    ```
- **Installation Steps of Ansible on CentOS Stream 9**
+
+**Installation Steps of Ansible on CentOS Stream 9:**
 ```bash
 sudo yum install ansible-core
 ```
 
-refer for information about the installation process on your specific distribution in [ansible official Installation guide](https://docs.ansible.com/ansible/2.9/installation_guide/index.html)
+Refer to the [Ansible Official Installation Guide](https://docs.ansible.com/ansible/2.9/installation_guide/index.html) for installation instructions tailored to your distribution.
 
+### - SSH Key Authentication
 
+Sudo access to the target machine is essential for executing the Ansible playbook. To securely manage access, follow these steps:
 
-
-### - Sudo access to the target machine is required for executing the Ansible playbook.
-
-a safe method to have sudo access to the target machine without saving sudo authentication in text format in inventory text is using SSH keys SSH key Authentication steps
-
-**1. SSH Key Generation**
+**1. SSH Key Generation:**
    ```bash
    ssh-keygen -t rsa -b 4096 -C "comment"
    ```
-   - comment is whatever text that can help you identify the purpose of the key
-   
-**2. Key Storage and Management**
+   Replace "comment" with text that identifies the key's purpose.
 
-   when you generate an ssh key you have 2 resulting keys 
-   the public key which you send to the target machine which works similarly to a lock
-   the private key which is used to open the lock and its security is most important.
-   to secure the private key Store them on a hardware security module (HSM) if available, 
-   Store keys in a dedicated directory with restricted permissions for example use CHMOD 700 
-   and Never share private keys or passphrase-encrypted private keys.
-   
-**3. Key Distribution**
-   
-   copy the created key to all remote machines. 
+**2. Key Storage and Management:**
+
+   When generating an SSH key, you get a public key (acts like a lock) and a private key (used to unlock the lock). To enhance security:
+   - Store private keys in a dedicated directory with restricted permissions (e.g., CHMOD 700).
+   - Avoid sharing private keys or passphrase-encrypted private keys.
+   - If available, consider storing private keys on a hardware security module (HSM).
+
+**3. Key Distribution:**
+
+   Copy the created public key to all remote machines:
    ```bash
    ssh-copy-id sudo_user@machine_ip
    ```
-   then you will be prompted for the user password after entering it the public key will be copied to the target machine
-
-
+   You'll be prompted for the user's password, after which the public key will be copied to the target machine.
 
 ## Setup Steps
 
-1. Clone the repository on your Ansible machine:
+1. Clone this repository on your Ansible machine:
 
    ```bash
    git clone https://github.com/BelalAEzzat/umami_prod.git
    ```
 
-2. Move to the playbook folder:
+2. Navigate to the playbook folder:
 
    ```bash
    cd umami_prod/playbook
    ```
 
-3. Create a `.env` file with the necessary environment variables. You can use the provided `env_template.j2` as a reference.
-POSTGRES_DB: is the name of the created DB
-POSTGRES_USER: name of the backup user
-POSTGRES_PASSWORD: backup usr password
-USERNAME: the name of the target machine user
+3. Create a `.env` file containing necessary environment variables. Use the provided `env_template.j2` as a reference. Key variables include:
+   - `POSTGRES_DB`: Name of the created database.
+   - `POSTGRES_USER`: Backup user's name.
+   - `POSTGRES_PASSWORD`: Backup user's password.
+   - `USERNAME`: Name of the target machine's user.
 
 4. Securely save the `.env` file using Ansible Vault or other encryption methods to protect sensitive information.
 
-5. Ensure you have sudo access on the target machine. This can be achieved by using superuser credentials or a sudo user with an SSH key.
+5. Ensure you have sudo access on the target machine. This can be achieved using superuser credentials or a sudo user with an SSH key.
 
 6. Open the playbook YAML file and update the `hosts` field with the target machine/group name.
 
-7. *(Optional)* The current playbook configuration creates a backup of the PostgreSQL container every 2 hours at `/home/usr/backup`. Modify this location and frequency according to your preference.
+7. *(Optional)* The playbook configuration currently schedules PostgreSQL container backups every 2 hours to `/home/usr/backup`. Customize the location and frequency according to your needs.
 
-8. Run the playbook using the following command, passing the `.env` file and the target host inventory file:
+8. Run the playbook with the following command, passing the `.env` file and the target host inventory file:
 
    ```bash
    ansible-playbook -i inventory.txt playbook.yml --extra-vars "@.env"
    ```
 
-9. Access the Umami interface from a browser by visiting `http://targetmachineIP:8080`.
+9. Access the Umami interface via a browser: `http://targetmachineIP:8080`.
 
-10. Login using the provided credentials: Username - `admin`, Password - `umami`.
+10. Use provided credentials to log in: Username - `admin`, Password - `umami`.
 
-11. Go to "Settings" > "Profile" and change the password to enhance security.
+11. In "Settings" > "Profile," change the password to enhance security.
 
-12. To track a website, go to "Websites" > "Add New Website". Enter the website's name and domain, then click "Get Tracking Code". Copy the tracking code generated.
+12. To track a website, go to "Websites" > "Add New Website." Enter the website's name and domain, then click "Get Tracking Code." Copy the generated tracking code.
 
-13. Add the copied tracking code to the HEAD of pages you want Umami to track access to. Deploy the changes to enable tracking.
+13. Add the tracking code to the HEAD of pages you want Umami to track. Deploy changes to enable tracking.
 
-14. *(Optional)* For tracking custom events, send an HTTP POST request with the JSON format of the event to `http://target_machine_ip:8080/api/send`. Refer to the example format at [Umami Documentation](https://umami.is/docs/sending-stats).
-
+14. *(Optional)* For tracking custom events, send an HTTP POST request with the JSON event format to `http://target_machine_ip:8080/api/send`. See the example format in the [Umami Documentation](https://umami.is/docs/sending-stats).
