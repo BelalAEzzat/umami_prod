@@ -73,6 +73,10 @@ a safe method to have sudo access to the target machine without saving sudo auth
    ```
 
 3. Create a `.env` file with the necessary environment variables. You can use the provided `env_template.j2` as a reference.
+POSTGRES_DB: is the name of the created DB
+POSTGRES_USER: name of the backup user
+POSTGRES_PASSWORD: backup usr password
+USERNAME: the name of the target machine user
 
 4. Securely save the `.env` file using Ansible Vault or other encryption methods to protect sensitive information.
 
