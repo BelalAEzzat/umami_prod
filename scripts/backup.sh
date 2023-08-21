@@ -7,7 +7,7 @@ BACKUP_DIR=/var/backups
 LOG_DIR=/var/backuplogs
 mkdir -p "$BACKUP_DIR"
 mkdir -p "$LOG_FILE"
-
+echo "$POSTGRES_USER"
 
 # Generate a timestamp for the backup file
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
