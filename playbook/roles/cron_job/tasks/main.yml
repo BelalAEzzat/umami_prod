@@ -1,7 +1,10 @@
 ---
+- name: Move files from source to destination
+  ansible.builtin.command:  # Using the command module for moving files
+    cmd: mv umami_prod/scripts/backup.sh /usr/local/bin/backup.sh
 - name: Set up cron job for running backup script
   cron:
     name: "backup DB container"
     hour: "*/2"
     minute: "0"
-    job: "/home/{{USERNAME}}/umami_prod/scripts/backup.sh"
+    job: "/usr/local/bin/backup.sh"
