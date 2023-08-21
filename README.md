@@ -1,7 +1,7 @@
 # umami_prod: Ansible and Docker Deployment for Umami and PostgreSQL
 
-This repository showcases an automated deployment solution using Ansible and Docker for deploying Umami, a web analytics platform, along with a PostgreSQL database on CentOS 9 distributions. The deployment process is structured with comprehensive security measures and automation.
-ansible is used to automate the steps for setting up the environment and deploying the application. by designing the ansible playbook to be Idempotent also allows ansible to be a maintaining tool.
+This repository showcases an automated deployment solution using Ansible and Docker for deploying Umami, a web analytics platform, and a PostgreSQL database on CentOS 9 distributions. The deployment process is structured with comprehensive security measures and automation.
+ansible is used to automate the steps for setting up the environment and deploying the application. by designing the Ansible playbook to be Idempotent also allows Ansible to be a maintaining tool.
 
 ## Prerequisites
 
@@ -43,8 +43,7 @@ Sudo access to the target machine is essential for executing the Ansible playboo
 **2. Key Storage and Management:**
 
    When generating an SSH key, you get a public key (acts like a lock) and a private key (used to unlock the lock). To enhance security:
-   - Store private keys in a dedicated directory with restricted permissions (e.g., CHMOD 700).
-   - Avoid sharing private keys or passphrase-encrypted private keys.
+   - Store private keys in a dedicated directory with restricted permissions.
    - If available, consider storing private keys on a hardware security module (HSM).
 
 **3. Key Distribution:**
